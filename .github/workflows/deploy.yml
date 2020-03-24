@@ -1,0 +1,28 @@
+name: Serverless CI/CD Deployment
+
+# Triggers the action everty time there is a code push to the master branch
+on:
+  push:
+    branches:
+      - master
+
+# Specify what jobs to run
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest 
+    env: #Setup environmental variables for serverless deployment
+        DEPLOY_STAGE: prod
+
+    steps:
+      # Use github default action to trigger action in this repo. Mandatory
+      # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/configuring-a-workflow#using-the-checkout-action
+      - uses: actions/checkout@v1 
+
+      - name: npm install dependencies
+        run: npm install
+        
+      - name: Serverless
+        uses: serverless/github-action@v1.53.0
+        with:
+          args: deploy
